@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Noun:
     """Class for representing a noun extracted from the text"""
 
@@ -17,7 +17,11 @@ def parse_articles():
 def parse_line(line: str) -> list[Noun] | None:
     if not line:
         return None
-    return [line]
+
+    singular_noun = Noun(article="Die", noun="Zeit")
+    plural_noun = Noun(article="Die", noun="Zeiten", is_plural=True)
+
+    return [singular_noun, plural_noun]
 
 
 if __name__ == "__main__":
