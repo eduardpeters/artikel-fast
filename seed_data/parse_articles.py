@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+import json
 
 PLURAL_ARTICLE = "Die"
 
@@ -14,6 +15,20 @@ class Noun:
 
 def parse_articles():
     print("Now parsing")
+    nouns: list[Noun] = []
+
+    with open("articles.txt") as seed_file:
+        for line in seed_file:
+            new_nouns = parse_line(line.strip())
+            if not new_nouns:
+                continue
+            nouns.extend(new_nouns)
+
+    nouns_to_write = [asdict(noun) for noun in nouns]
+    with open("nouns.json", "w") as json_file:
+        json.dump(nouns_to_write, json_file)
+
+    print(f"Parsed and saved: {len(nouns)} nouns!")
 
 
 def parse_line(line: str) -> list[Noun] | None:
