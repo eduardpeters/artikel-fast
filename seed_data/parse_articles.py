@@ -25,6 +25,10 @@ def parse_line(line: str) -> list[Noun] | None:
     singular_noun = Noun(
         article=parsed_singular_parts[0], noun=parsed_singular_parts[1]
     )
+
+    if len(parsed_plural_parts) <= 1:
+        return [singular_noun]
+
     plural_noun = Noun(
         article=parsed_plural_parts[0], noun=parsed_plural_parts[1], is_plural=True
     )

@@ -18,3 +18,14 @@ class TestLineParsing:
         result = parse_line(line_to_parse)
 
         assert result == expected
+
+    def test_no_plurals_line(self):
+        line_to_parse = "33. Water	Das Wasser	-"
+
+        expected = [
+            Noun(article="Das", noun="Wasser"),
+        ]
+
+        result = parse_line(line_to_parse)
+
+        assert result == expected
