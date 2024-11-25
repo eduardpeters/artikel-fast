@@ -26,7 +26,7 @@ def parse_articles():
 
     nouns_to_write = [asdict(noun) for noun in nouns]
     with open("nouns.json", "w") as json_file:
-        json.dump(nouns_to_write, json_file)
+        json.dump(nouns_to_write, json_file, indent=2)
 
     print(f"Parsed and saved: {len(nouns)} nouns!")
 
