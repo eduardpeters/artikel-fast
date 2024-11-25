@@ -19,11 +19,33 @@ class TestLineParsing:
 
         assert result == expected
 
-    def test_no_plurals_line(self):
+    def test_no_plurals_dash_line(self):
         line_to_parse = "33. Water	Das Wasser	-"
 
         expected = [
             Noun(article="Das", noun="Wasser"),
+        ]
+
+        result = parse_line(line_to_parse)
+
+        assert result == expected
+
+    def test_no_plurals_line(self):
+        line_to_parse = "1993. Frost	Der Frost	(no plural form)"
+
+        expected = [
+            Noun(article="Der", noun="Frost"),
+        ]
+
+        result = parse_line(line_to_parse)
+
+        assert result == expected
+
+    def test_no_plural_unaccountable_line(self):
+        line_to_parse = "2000. Cooking	Das Kochen	(usually uncountable)"
+
+        expected = [
+            Noun(article="Das", noun="Kochen"),
         ]
 
         result = parse_line(line_to_parse)

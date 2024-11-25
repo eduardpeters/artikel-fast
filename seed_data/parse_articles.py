@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+PLURAL_ARTICLE = "Die"
+
 
 @dataclass(frozen=True)
 class Noun:
@@ -26,7 +28,7 @@ def parse_line(line: str) -> list[Noun] | None:
         article=parsed_singular_parts[0], noun=parsed_singular_parts[1]
     )
 
-    if len(parsed_plural_parts) <= 1:
+    if parsed_plural_parts[0] != PLURAL_ARTICLE:
         return [singular_noun]
 
     plural_noun = Noun(
