@@ -18,8 +18,16 @@ def parse_line(line: str) -> list[Noun] | None:
     if not line:
         return None
 
-    singular_noun = Noun(article="Die", noun="Zeit")
-    plural_noun = Noun(article="Die", noun="Zeiten", is_plural=True)
+    line_parts = line.split("\t")
+    parsed_singular_parts = line_parts[1].split(" ")
+    parsed_plural_parts = line_parts[2].split(" ")
+
+    singular_noun = Noun(
+        article=parsed_singular_parts[0], noun=parsed_singular_parts[1]
+    )
+    plural_noun = Noun(
+        article=parsed_plural_parts[0], noun=parsed_plural_parts[1], is_plural=True
+    )
 
     return [singular_noun, plural_noun]
 
