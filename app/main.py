@@ -2,15 +2,21 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException
-from pydantic import BaseModel
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 
-class Noun(SQLModel, table=True):
+class NounBase(SQLModel):
+    noun: str
+
+
+class Noun(NounBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     article: str
-    noun: str
     is_plural: bool = False
+
+
+class NounQuestion(NounBase):
+    id: int
 
 
 sqlite_filename = "database.db"
@@ -49,7 +55,7 @@ def get_session():
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@asynccontextmanager  # type: ignore
+@asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db_and_tables()
     yield
@@ -75,5 +81,15 @@ async def get_noun_by_id(noun_id: int, session: SessionDep):
 
     if not noun:
         raise HTTPException(status_code=404, detail="Noun not found")
+
+    return noun
+
+
+@app.get("/questions/{noun_id}", response_model=NounQuestion)
+async def get_question_by_noun_id(noun_id: int, session: SessionDep):
+    noun = session.get(Noun, noun_id)
+
+    if not noun:
+        raise HTTPException(status_code=404, detail="Question not found")
 
     return noun
