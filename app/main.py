@@ -69,11 +69,11 @@ async def get_nouns(session: SessionDep):
     return nouns
 
 
-"""
 @app.get("/nouns/{noun_id}", response_model=Noun)
-async def get_noun_by_id(noun_id: int):
-    noun = fake_db.get(noun_id)
+async def get_noun_by_id(noun_id: int, session: SessionDep):
+    noun = session.get(Noun, noun_id)
+
     if not noun:
         raise HTTPException(status_code=404, detail="Noun not found")
+
     return noun
-"""

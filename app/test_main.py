@@ -11,6 +11,11 @@ def test_read_main():
     assert response.json() == {"message": "Hello World"}
 
 
+def test_get_nouns():
+    response = client.get("/nouns")
+    assert response.status_code == 200
+
+
 def test_get_missing_noun_id():
     response = client.get("/nouns/9999")
     assert response.status_code == 404
@@ -20,4 +25,9 @@ def test_get_missing_noun_id():
 def test_get_noun_by_id():
     response = client.get("/nouns/1")
     assert response.status_code == 200
-    assert response.json() == {"article": "Die", "noun": "Zeit", "is_plural": False}
+    assert response.json() == {
+        "id": 1,
+        "article": "Die",
+        "noun": "Zeit",
+        "is_plural": False,
+    }
