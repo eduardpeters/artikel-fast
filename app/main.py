@@ -2,33 +2,10 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from sqlmodel import Session, SQLModel, create_engine, select
 
-
-class Article(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    article: str
-
-
-class NounBase(SQLModel):
-    noun: str
-
-
-class Noun(NounBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    is_plural: bool = False
-
-    article_id: int = Field(foreign_key="article.id")
-
-
-class NounResponse(NounBase):
-    id: int
-    is_plural: bool
-    article: str
-
-
-class NounQuestion(NounBase):
-    id: int
+from models.article import Article
+from models.noun import Noun, NounQuestion, NounResponse
 
 
 sqlite_filename = "database.db"
