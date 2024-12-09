@@ -23,6 +23,7 @@ class Noun(NounBase, table=True):
 
 class NounResponse(NounBase):
     id: int
+    is_plural: bool
     article: str
 
 
@@ -108,8 +109,11 @@ async def get_noun_by_id(noun_id: int, session: SessionDep):
         raise HTTPException(status_code=404, detail="Noun not found")
 
     noun, article = result
+    assert noun.id is not None
 
-    response = NounResponse(id=noun.id, noun=noun.noun, article=article.article)
+    response = NounResponse(
+        id=noun.id, noun=noun.noun, is_plural=noun.is_plural, article=article.article
+    )
 
     return response
 
