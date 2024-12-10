@@ -1,3 +1,4 @@
 fastapi[standard]==0.115.0
 httpx==0.28.0
 pytest==8.3.3
+sqlmodel==0.0.22
