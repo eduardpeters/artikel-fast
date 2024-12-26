@@ -109,3 +109,41 @@ def test_get_question_noun_by_id(session: Session, client: TestClient):
     response = client.get("questions/1")
     assert response.status_code == 200
     assert response.json() == {"id": 1, "noun": "Zeit"}
+
+
+def test_answer_missing_question(session: Session, client: TestClient):
+    load_seed_data(session)
+
+    answer = {"question_id": 9999, "answer": 1}
+    response = client.post("answers", json=answer)
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Question not found"}
+
+
+def test_answer_question_incorrectly_returns_feedback(
+    session: Session, client: TestClient
+):
+    load_article_data(session)
+    noun_1 = Noun(article_id=2, noun="Zeit")
+    session.add(noun_1)
+    session.commit()
+
+    answer = {"question_id": 1, "answer": 1}
+    response = client.post("answers", json=answer)
+    assert response.status_code == 200
+    assert response.json() == {"feedback": "KO"}
+
+
+def test_answer_question_correctly_returns_feedback(
+    session: Session, client: TestClient
+):
+    load_article_data(session)
+    noun_1 = Noun(article_id=2, noun="Zeit")
+    session.add(noun_1)
+    session.commit()
+
+    answer = {"question_id": 1, "answer": 2}
+    response = client.post("answers", json=answer)
+    assert response.status_code == 200
+    assert response.json() == {"feedback": "OK"}

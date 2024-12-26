@@ -5,6 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlmodel import Session, select
 
 from models.article import Article
+from models.answer import AnswerFeedback, QuestionAnswer
 from models.noun import Noun, NounQuestion, NounResponse
 from utils.database import create_db_and_tables, engine
 
@@ -64,3 +65,18 @@ async def get_question_by_noun_id(noun_id: int, session: SessionDep):
         raise HTTPException(status_code=404, detail="Question not found")
 
     return noun
+
+
+@app.post("/answers", response_model=AnswerFeedback)
+async def post_answer_question(answer: QuestionAnswer, session: SessionDep):
+    noun = session.get(Noun, answer.question_id)
+
+    if not noun:
+        raise HTTPException(status_code=404, detail="Question not found")
+
+    if noun.article_id == answer.answer:
+        feedback = AnswerFeedback(feedback="OK")
+    else:
+        feedback = AnswerFeedback(feedback="KO")
+
+    return feedback
