@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import Session, select, text
 
 from models.article import Article
 from models.answer import AnswerFeedback, QuestionAnswer
@@ -55,6 +55,24 @@ async def get_noun_by_id(noun_id: int, session: SessionDep):
     )
 
     return response
+
+
+@app.get("/questions/random")
+async def get_random_question(session: SessionDep):
+    query = text(
+        """
+        SELECT id, noun FROM noun 
+        WHERE _ROWID_ >= (abs(random()) % (SELECT max(_ROWID_) FROM noun))
+        LIMIT 1
+        """
+    )
+
+    result = session.connection().execute(query).first()
+
+    if not result:
+        raise HTTPException(500)
+
+    return NounQuestion(id=result[0], noun=result[1])
 
 
 @app.get("/questions/{noun_id}", response_model=NounQuestion)

@@ -111,6 +111,14 @@ def test_get_question_noun_by_id(session: Session, client: TestClient):
     assert response.json() == {"id": 1, "noun": "Zeit"}
 
 
+def test_get_random_question_noun(session: Session, client: TestClient):
+    load_seed_data(session)
+
+    response = client.get("/questions/random")
+    assert response.status_code == 200
+    assert list(response.json().keys()) == ["noun", "id"]
+
+
 def test_answer_missing_question(session: Session, client: TestClient):
     load_seed_data(session)
 
