@@ -92,9 +92,8 @@ async def post_answer_question(answer: QuestionAnswer, session: SessionDep):
     if not noun:
         raise HTTPException(status_code=404, detail="Question not found")
 
+    feedback = AnswerFeedback(feedback="KO", article_id=noun.article_id)
     if noun.article_id == answer.answer:
-        feedback = AnswerFeedback(feedback="OK")
-    else:
-        feedback = AnswerFeedback(feedback="KO")
+        feedback.feedback = "OK"
 
     return feedback

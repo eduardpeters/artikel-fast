@@ -9,4 +9,5 @@ class QuestionAnswer(BaseModel):
 
 
 class AnswerFeedback(BaseModel):
+    article_id: int
     feedback: Literal["KO", "OK"]
