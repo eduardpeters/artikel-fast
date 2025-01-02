@@ -140,7 +140,7 @@ def test_answer_question_incorrectly_returns_feedback(
     answer = {"question_id": 1, "answer": 1}
     response = client.post("answers", json=answer)
     assert response.status_code == 200
-    assert response.json() == {"feedback": "KO"}
+    assert response.json() == {"feedback": "KO", "article_id": 2}
 
 
 def test_answer_question_correctly_returns_feedback(
@@ -154,4 +154,4 @@ def test_answer_question_correctly_returns_feedback(
     answer = {"question_id": 1, "answer": 2}
     response = client.post("answers", json=answer)
     assert response.status_code == 200
-    assert response.json() == {"feedback": "OK"}
+    assert response.json() == {"feedback": "OK", "article_id": 2}
