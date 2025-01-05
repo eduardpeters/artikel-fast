@@ -2,8 +2,10 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session, select, text
 
+from config.config import settings
 from models.article import Article
 from models.answer import AnswerFeedback, QuestionAnswer
 from models.noun import Noun, NounQuestion, NounResponse
@@ -25,6 +27,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+origins = settings.cors_origins.split(",")
+app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET", "POST"])
 
 
 @app.get("/")
