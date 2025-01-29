@@ -1,1 +1,5 @@
 fly.toml
+**/__pycache__
+**/.pytest_cache
+**/database.db
+

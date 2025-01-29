@@ -12,6 +12,12 @@ RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 COPY ./app /app
 
+RUN chmod -R 777 /app
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+USER appuser
+
 EXPOSE 8080
 
 CMD ["fastapi", "run", "main.py", "--port", "8080"]
