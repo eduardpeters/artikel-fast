@@ -43,6 +43,27 @@ async def get_nouns(session: SessionDep):
     return nouns
 
 
+@app.get("/nouns/random", response_model=NounResponse)
+async def get_random_noun(session: SessionDep):
+    query = text(
+        """
+        SELECT noun.id, noun.noun, noun.is_plural, article.article FROM noun 
+        INNER JOIN article ON noun.article_id = article.id
+        WHERE noun.id >= (abs(random()) % (SELECT max(_ROWID_) FROM noun))
+        LIMIT 1
+        """
+    )
+
+    result = session.connection().execute(query).first()
+
+    if not result:
+        raise HTTPException(500)
+
+    return NounResponse(
+        id=result[0], noun=result[1], is_plural=result[2], article=result[3]
+    )
+
+
 @app.get("/nouns/{noun_id}", response_model=NounResponse)
 async def get_noun_by_id(noun_id: int, session: SessionDep):
     result = session.exec(
