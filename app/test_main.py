@@ -93,6 +93,14 @@ def test_get_noun_by_id(session: Session, client: TestClient):
     }
 
 
+def test_get_random_noun(session: Session, client: TestClient):
+    load_seed_data(session)
+
+    response = client.get("/nouns/random")
+    assert response.status_code == 200
+    assert list(response.json().keys()) == ["noun", "id", "is_plural", "article"]
+
+
 def test_get_missing_question_noun_by_id(session: Session, client: TestClient):
     load_seed_data(session)
     response = client.get("/questions/9999")
