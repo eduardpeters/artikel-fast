@@ -4,7 +4,7 @@
 #
 
 app = 'artikel-fast'
-primary_region = 'mad'
+primary_region = 'cdg'
 
 [build]
   dockerfile = 'Dockerfile'
